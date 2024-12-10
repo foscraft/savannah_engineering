@@ -106,6 +106,14 @@ docker compose build
 docker compose up -d
 ```
 
+Running this creates the `scripts` directory, later the `data` directory is created and subdirectories `jsons`, `cleaned`, `insights`. The relevant files are created and populated into the directories specified. All these happens when the pipeline is started.
+
+The pipeline runs `hourly`
+
+![](./media/2.png)
+
+![](./media/1.png)
+
 Incase you're having trouble logging in to airflow; reset password.
 
 ```bash
