@@ -1,19 +1,13 @@
 services:
-  notebook-converter:
+  savannah-service-start:
     build:
       context: .
       dockerfile: Dockerfile  
     volumes:
       - ./notebooks:/app/notebooks 
       - ./scripts:/app/scripts 
-    command: tail -f /dev/null  # Keep the container running   
-    # command: >
-    #   bash -c "
-    #     jupyter nbconvert --to script /app/notebooks/extract_data.ipynb --output /app/scripts/extract_data.py && 
-    #     jupyter nbconvert --to script /app/notebooks/clean_data.ipynb --output /app/scripts/clean_data.py && 
-    #     jupyter nbconvert --to script /app/notebooks/generate_insights.ipynb --output /app/scripts/generate_insights.py
-    #   "
-
+    command: tail -f /dev/null 
+    
   # Airflow Database Initialization
   airflow-db-init:
     image: apache/airflow:2.6.1
@@ -41,7 +35,7 @@ services:
       - ./scripts:/opt/airflow/scripts
     command: bash -c "airflow celery worker"
     depends_on:
-      - notebook-converter
+      - savannah-service-start
       - airflow-db-init
 
   # Airflow Scheduler
@@ -57,7 +51,7 @@ services:
       - ./scripts:/opt/airflow/scripts
     command: bash -c "airflow scheduler"
     depends_on:
-      - notebook-converter
+      - savannah-service-start
       - airflow-db-init
 
   # Airflow Webserver (UI to monitor DAGs)
