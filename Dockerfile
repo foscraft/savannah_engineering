@@ -10,6 +10,8 @@ RUN pip install --no-cache-dir --upgrade pip setuptools
 
 RUN pip install --upgrade pip
 
+COPY . .
+
 RUN pip install pandas requests apache-airflow[postgres] psycopg2-binary
 
 RUN pip install apache-airflow==2.6.1 jupyter
