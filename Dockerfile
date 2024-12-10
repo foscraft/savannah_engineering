@@ -17,8 +17,8 @@ RUN pip install pandas requests apache-airflow[postgres] psycopg2-binary apache-
 RUN mkdir -p /app/scripts
 
 # Convert notebooks to scripts
-RUN jupyter nbconvert --to script /app/notebooks/extract_data.ipynb --output /app/scripts/extract_data && \
-    jupyter nbconvert --to script /app/notebooks/clean_data.ipynb --output /app/scripts/clean_data && \
-    jupyter nbconvert --to script /app/notebooks/generate_insights.ipynb --output /app/scripts/generate_insights
+RUN jupyter nbconvert --to script /app/notebooks/extract_data.ipynb --output-dir /app/scripts
+RUN jupyter nbconvert --to script /app/notebooks/clean_data.ipynb --output-dir /app/scripts
+RUN jupyter nbconvert --to script /app/notebooks/generate_insights.ipynb --output-dir /app/scripts
 
 

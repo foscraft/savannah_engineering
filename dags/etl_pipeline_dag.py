@@ -22,7 +22,7 @@ default_args = {
 }
 
 dag = DAG(
-    'savannah_pipeline',
+    'savannah_etl_pipeline',
     default_args=default_args,
     description='ETL Pipeline for Claims and User Data',
     schedule_interval='0 * * * *', 

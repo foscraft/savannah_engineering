@@ -18,7 +18,7 @@ services:
       - AIRFLOW__WEBSERVER__SECRET_KEY=90eHE7lpIVLKF6Tn8wQMy7Wmo5WIpTl8/AosMwzPKa0=
     volumes:
       - ./dags:/opt/airflow/dags
-      - ./scripts:/opt/airflow/scripts
+      - ./scripts:/app/scripts
     command: bash -c "airflow db init"
     depends_on:
       - airflow-db
@@ -32,7 +32,7 @@ services:
       - AIRFLOW__WEBSERVER__SECRET_KEY=90eHE7lpIVLKF6Tn8wQMy7Wmo5WIpTl8/AosMwzPKa0=
     volumes:
       - ./dags:/opt/airflow/dags
-      - ./scripts:/opt/airflow/scripts
+      - ./scripts:/app/scripts
     command: bash -c "airflow celery worker"
     depends_on:
       - savannah-service-start
@@ -48,7 +48,7 @@ services:
       - AIRFLOW__WEBSERVER__SECRET_KEY=90eHE7lpIVLKF6Tn8wQMy7Wmo5WIpTl8/AosMwzPKa0=
     volumes:
       - ./dags:/opt/airflow/dags
-      - ./scripts:/opt/airflow/scripts
+      - ./scripts:/app/scripts
     command: bash -c "airflow scheduler"
     depends_on:
       - savannah-service-start
@@ -64,7 +64,7 @@ services:
       - AIRFLOW__WEBSERVER__SECRET_KEY=90eHE7lpIVLKF6Tn8wQMy7Wmo5WIpTl8/AosMwzPKa0=
     volumes:
       - ./dags:/opt/airflow/dags
-      - ./scripts:/opt/airflow/scripts
+      - ./scripts:/app/scripts
     ports:
       - "4001:8080"
     command: bash -c "airflow webserver"
