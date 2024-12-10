@@ -26,6 +26,8 @@ wheels/
 MANIFEST
 venv
 .venv
+.vscode
+.vscod
 .env.sh
 *.ini
 hosts.ini

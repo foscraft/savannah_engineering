@@ -1,18 +1,18 @@
 services:
-  # Notebook Converter Service
   notebook-converter:
     build:
       context: .
       dockerfile: Dockerfile  
     volumes:
       - ./notebooks:/app/notebooks 
-      - ./scripts:/app/scripts     
-    command: >
-      bash -c "
-        jupyter nbconvert --to script /app/notebooks/extract_data.ipynb --output /app/scripts/extract_data.py && 
-        jupyter nbconvert --to script /app/notebooks/clean_data.ipynb --output /app/scripts/clean_data.py && 
-        jupyter nbconvert --to script /app/notebooks/generate_insights.ipynb --output /app/scripts/generate_insights.py
-      "
+      - ./scripts:/app/scripts 
+    command: tail -f /dev/null  # Keep the container running   
+    # command: >
+    #   bash -c "
+    #     jupyter nbconvert --to script /app/notebooks/extract_data.ipynb --output /app/scripts/extract_data.py && 
+    #     jupyter nbconvert --to script /app/notebooks/clean_data.ipynb --output /app/scripts/clean_data.py && 
+    #     jupyter nbconvert --to script /app/notebooks/generate_insights.ipynb --output /app/scripts/generate_insights.py
+    #   "
 
   # Airflow Database Initialization
   airflow-db-init:
@@ -29,7 +29,6 @@ services:
     depends_on:
       - airflow-db
 
-  # Airflow Worker
   airflow-celery-worker:
     image: apache/airflow:2.6.1
     environment:

@@ -14,6 +14,9 @@ RUN pip install pandas requests apache-airflow[postgres] psycopg2-binary
 
 RUN pip install apache-airflow==2.6.1 jupyter
 
-#RUN airflow users reset-password --username admin
+# Convert notebooks to scripts
+RUN jupyter nbconvert --to script /app/notebooks/extract_data.ipynb --output /app/scripts/extract_data.py && \
+    jupyter nbconvert --to script /app/notebooks/clean_data.ipynb --output /app/scripts/clean_data.py && \
+    jupyter nbconvert --to script /app/notebooks/generate_insights.ipynb --output /app/scripts/generate_insights.py
 
 
