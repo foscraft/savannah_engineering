@@ -1,0 +1,16 @@
+{
+    "ansible.python.interpreterPath": "/home/reuben/Documents/WORK/IMS/ims-music-reports-app/venv/bin/python",
+    "cSpell.words": [
+        "COMSFC",
+        "CRBT",
+        "enctype",
+        "ipynb",
+        "jsons",
+        "MYSKIZA",
+        "nbconvert",
+        "openxmlformats-officedocument.spreadsheetml",
+        "Skiza",
+        "stylesheet",
+        "uvicorn"
+    ]
+}

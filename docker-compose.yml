@@ -1,0 +1,93 @@
+services:
+  # Notebook Converter Service
+  notebook-converter:
+    build:
+      context: .
+      dockerfile: Dockerfile  
+    volumes:
+      - ./notebooks:/app/notebooks 
+      - ./scripts:/app/scripts     
+    command: >
+      bash -c "
+        jupyter nbconvert --to script /app/notebooks/extract_data.ipynb --output /app/scripts/extract_data.py && 
+        jupyter nbconvert --to script /app/notebooks/clean_data.ipynb --output /app/scripts/clean_data.py && 
+        jupyter nbconvert --to script /app/notebooks/generate_insights.ipynb --output /app/scripts/generate_insights.py
+      "
+
+  # Airflow Database Initialization
+  airflow-db-init:
+    image: apache/airflow:2.6.1
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__WEBSERVER__ENABLE_PROXY_FIX=True
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
+      - AIRFLOW__WEBSERVER__SECRET_KEY=90eHE7lpIVLKF6Tn8wQMy7Wmo5WIpTl8/AosMwzPKa0=
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./scripts:/opt/airflow/scripts
+    command: bash -c "airflow db init"
+    depends_on:
+      - airflow-db
+
+  # Airflow Worker
+  airflow-celery-worker:
+    image: apache/airflow:2.6.1
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__WEBSERVER__ENABLE_PROXY_FIX=True
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
+      - AIRFLOW__WEBSERVER__SECRET_KEY=90eHE7lpIVLKF6Tn8wQMy7Wmo5WIpTl8/AosMwzPKa0=
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./scripts:/opt/airflow/scripts
+    command: bash -c "airflow celery worker"
+    depends_on:
+      - notebook-converter
+      - airflow-db-init
+
+  # Airflow Scheduler
+  airflow-scheduler:
+    image: apache/airflow:2.6.1
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__WEBSERVER__ENABLE_PROXY_FIX=True
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
+      - AIRFLOW__WEBSERVER__SECRET_KEY=90eHE7lpIVLKF6Tn8wQMy7Wmo5WIpTl8/AosMwzPKa0=
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./scripts:/opt/airflow/scripts
+    command: bash -c "airflow scheduler"
+    depends_on:
+      - notebook-converter
+      - airflow-db-init
+
+  # Airflow Webserver (UI to monitor DAGs)
+  airflow-webserver:
+    image: apache/airflow:2.6.1
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__WEBSERVER__ENABLE_PROXY_FIX=True
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
+      - AIRFLOW__WEBSERVER__SECRET_KEY=90eHE7lpIVLKF6Tn8wQMy7Wmo5WIpTl8/AosMwzPKa0=
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./scripts:/opt/airflow/scripts
+    ports:
+      - "4001:8080"
+    command: bash -c "airflow webserver"
+    depends_on:
+      - airflow-scheduler
+      - airflow-db-init
+
+  # Airflow Database (for metadata storage)
+  airflow-db:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+    volumes:
+      - airflow_db_volume:/var/lib/postgresql/data
+
+volumes:
+  airflow_db_volume:
