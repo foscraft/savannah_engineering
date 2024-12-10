@@ -1,14 +1,13 @@
 services:
-  savannah-service-start:
+  notebook-converter:
     build:
       context: .
       dockerfile: Dockerfile  
     volumes:
       - ./notebooks:/app/notebooks 
       - ./scripts:/app/scripts 
-    command: tail -f /dev/null 
-    
-  # Airflow Database Initialization
+    user: "0:0"  # Run as root (UID=0, GID=0)
+
   airflow-db-init:
     image: apache/airflow:2.6.1
     environment:
@@ -18,10 +17,12 @@ services:
       - AIRFLOW__WEBSERVER__SECRET_KEY=90eHE7lpIVLKF6Tn8wQMy7Wmo5WIpTl8/AosMwzPKa0=
     volumes:
       - ./dags:/opt/airflow/dags
-      - ./scripts:/app/scripts
+      - ./scripts:/opt/airflow/scripts
+      - ./data:/opt/airflow/data 
     command: bash -c "airflow db init"
     depends_on:
       - airflow-db
+    user: "0:0"  # Run as root (UID=0, GID=0)
 
   airflow-celery-worker:
     image: apache/airflow:2.6.1
@@ -32,13 +33,14 @@ services:
       - AIRFLOW__WEBSERVER__SECRET_KEY=90eHE7lpIVLKF6Tn8wQMy7Wmo5WIpTl8/AosMwzPKa0=
     volumes:
       - ./dags:/opt/airflow/dags
-      - ./scripts:/app/scripts
+      - ./scripts:/opt/airflow/scripts
+      - ./data:/opt/airflow/data  
     command: bash -c "airflow celery worker"
     depends_on:
-      - savannah-service-start
+      - notebook-converter
       - airflow-db-init
+    user: "0:0"  # Run as root (UID=0, GID=0)
 
-  # Airflow Scheduler
   airflow-scheduler:
     image: apache/airflow:2.6.1
     environment:
@@ -48,13 +50,14 @@ services:
       - AIRFLOW__WEBSERVER__SECRET_KEY=90eHE7lpIVLKF6Tn8wQMy7Wmo5WIpTl8/AosMwzPKa0=
     volumes:
       - ./dags:/opt/airflow/dags
-      - ./scripts:/app/scripts
+      - ./scripts:/opt/airflow/scripts
+      - ./data:/opt/airflow/data  
     command: bash -c "airflow scheduler"
     depends_on:
-      - savannah-service-start
+      - notebook-converter
       - airflow-db-init
+    user: "0:0"  # Run as root (UID=0, GID=0)
 
-  # Airflow Webserver (UI to monitor DAGs)
   airflow-webserver:
     image: apache/airflow:2.6.1
     environment:
@@ -64,15 +67,16 @@ services:
       - AIRFLOW__WEBSERVER__SECRET_KEY=90eHE7lpIVLKF6Tn8wQMy7Wmo5WIpTl8/AosMwzPKa0=
     volumes:
       - ./dags:/opt/airflow/dags
-      - ./scripts:/app/scripts
+      - ./scripts:/opt/airflow/scripts
+      - ./data:/opt/airflow/data  # Add this line
     ports:
       - "4001:8080"
     command: bash -c "airflow webserver"
     depends_on:
       - airflow-scheduler
       - airflow-db-init
+    user: "0:0"  # Run as root (UID=0, GID=0)
 
-  # Airflow Database (for metadata storage)
   airflow-db:
     image: postgres:13
     environment:

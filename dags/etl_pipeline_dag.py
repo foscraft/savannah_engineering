@@ -4,10 +4,11 @@ from datetime import datetime
 import subprocess
 import os
 
-BASEDIR = os.path.dirname(os.path.abspath(__file__))
+BASEDIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "scripts"))
 
 def run_script(script_name):
-    script_path = os.path.join(BASEDIR, "scripts", script_name)
+    script_path = os.path.join(BASEDIR, script_name)
+    print(f"Running script from path: {script_path}")
     if not os.path.exists(script_path):
         raise FileNotFoundError(f"Script {script_path} not found")
     result = subprocess.run(['python3', script_path], capture_output=True, text=True)
@@ -25,13 +26,13 @@ dag = DAG(
     'savannah_etl_pipeline',
     default_args=default_args,
     description='ETL Pipeline for Claims and User Data',
-    schedule_interval='0 * * * *', 
+    schedule_interval='0 * * * *',
 )
 
 task_extract = PythonOperator(
     task_id='extract_data',
     python_callable=run_script,
-    op_args=['extract_data.py'],  
+    op_args=['extract_data.py'],
     dag=dag,
 )
 
