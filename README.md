@@ -110,9 +110,9 @@ Running this creates the `scripts` directory, later the `data` directory is crea
 
 The pipeline runs `hourly`
 
-![](./media/2.png)
+![Airflow DAG Structure](media/2.png)//+
 
-![](./media/1.png)
+![Airflow DAG Structure](media/1.png)//+
 
 Incase you're having trouble logging in to airflow; reset password.
 
