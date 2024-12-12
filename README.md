@@ -92,6 +92,8 @@ This script analyzes cleaned data from e-commerce operations, generating insight
 
 The analysis includes three key components: a user summary, a category summary, and enriched cart details. The user summary aggregates data by user_id to calculate each user's total spending and the number of items purchased, enriching the results with user demographic information like age and city. The category summary calculates total sales and items sold for each product category, offering insights into category performance. Lastly, cart details combine user and product information with cart transactions to provide a granular view of each purchase. These insights are saved as CSV files for further review or integration into reporting tools.
 
+*If you have a process you want to add, just write the script, drop it in `scripts` dir and extend the dag by adding the trigger to `dags/etl_pipeline_dag.py` and you're good to go*
+
 Go to  `http://127.0.0.1:4001` on your browser to get started.
 
 Login have a view of the  flow and trigger the worflow.
@@ -118,3 +120,12 @@ Generate the secret key for for airflow (I have created one secret and passed it
 ```bash
 openssl rand -base64 32
 ```
+
+
+## FIndings:
+
+1. Product Category Performance and Customer Spending Trends: From the product sales data, womens-watches stands out with the highest revenue of $151,399.74, despite only 8 units sold. This indicates that customers are willing to spend more on high-value items, and premium products have the potential to drive significant revenue. Conversely, womens-bags, with only $599.99 in total sales from a single unit sold, shows that not all categories have similar sales performance. These findings suggest that luxury or high-end items, such as watches, tend to yield greater value despite lower volumes, while other categories, such as motorcycles and vehicles, contribute heavily to revenue but are not sold as frequently. Additionally, smartphones and laptops show consistent demand with higher units sold, but their total sales are more spread across a wider customer base, suggesting a more balanced price point compared to the high-ticket categories.
+
+2. High-Value Customers and Geographic Distribution: Analyzing the customer spending data reveals a strong concentration of high-value customers in specific cities, such as Denver, San Jose, and Dallas. These cities appear to be hubs of higher consumer spending, with customers like Carter in Denver, who has spent a staggering $274,072.67, leading the pack. Other cities like San Francisco and San Diego also contribute significantly to overall sales. The demographic data shows that customers aged between 29 and 39 years dominate the higher spending segments. This indicates that customers in their late 20s to late 30s are a key target for premium product categories and suggest a potential market segment for luxury goods such as watches, furniture, and motorcycles.
+
+3. Customer Purchasing Behavior and Value Proposition: The combination of total spending and total items sold shows that there is a clear divide between frequent, lower-ticket purchases and occasional, high-ticket purchases. Customers like Chloe in Dallas, who made 9 purchases worth $16,143.72, and Carter in Denver, who made fewer but larger purchases, suggest that offering a mix of both low and high-value products can attract a diverse customer base. Customers with a higher frequency of purchases tend to spend more overall, even if the average transaction value is lower. This highlights the importance of having products that cater to both price-sensitive buyers and those looking to make more substantial investments in high-ticket items. The overall age group of 29-39 appears to be the most lucrative, confirming that marketing efforts and product offerings should target this age demographic with both affordable and premium product ranges to optimize sales.
