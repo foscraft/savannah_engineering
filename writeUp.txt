@@ -1,0 +1,33 @@
+Pipeline Overview
+
+Steps:
+
+Extract Data: Fetch raw data from APIs and save locally as JSON to data/jsons directory.
+Clean Data: Process raw JSON into cleaned CSV datasets to data/cleaned.
+Transform Data: Generate enriched datasets with user and product insights to data/insights directory.
+Automate Tasks: Orchestrate pipeline execution using Apache Airflow.
+
+Tech Stack
+
+Primary Tools: Python, Docker, Apache Airflow, Bash.
+Data Storage: Local JSON and CSV files.
+
+Pipeline Design
+
+Extract Data: Fetch raw data from APIs and save to data/jsons/.
+Clean Data: Process raw JSON into cleaned CSV files and save to data/cleaned/.
+Transform Data: Generate insights and save to data/insights/.
+
+Findings
+
+Product Category Performance and Customer Spending Trends:
+High-value products like womens-watches have high revenue despite low sales volume.
+Categories like motorcycles and vehicles have heavy contributions to revenue but are not sold as frequently.
+
+High-Value Customers and Geographic Distribution:
+High-value customers are concentrated in cities like Denver, San Jose, and Dallas, and the key spending demographic is between 29-39 years old.
+
+Customer Purchasing Behavior and Value Proposition:
+A combination of low and high-value products attracts both price-sensitive and high-investment customers.
+The age group 29-39 is the most lucrative, indicating that marketing efforts should target this demographic with both affordable and premium products.
+
