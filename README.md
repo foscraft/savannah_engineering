@@ -1,80 +1,37 @@
-# Data Engineering Screening Challenge
+# **Data Engineering Screening Challenge**
 
-This assessment is designed to evaluate your ability to design, implement, and document a complete ETL pipeline using real-world data. The task mimics challenges faced in a data engineering environment, involving data ingestion, cleaning, transformation, and analysis using modern cloud tools.
+This project demonstrates the implementation of a complete ETL pipeline to process claims and user data using Python, Docker, Apache Airflow, and Bash. The pipeline extracts data from APIs, cleans and processes it, and generates enriched datasets with insights.
 
-## Objective
+---
 
-Build a pipeline that processes claims and user data by:
+## **Pipeline Overview**
 
-1. Extracting data from multiple APIs.
-2. Cleaning and normalizing the data.
-3. Joining datasets to generate insights.
-4. Automating the pipeline and documenting your work.
+### **Steps**
 
-We encourage you to use Apache Airflow, Docker, and Python, but you may use normal Python scripts if preferred. Follow software engineering best practices, including modular code, clear documentation, and adherence to coding standards.
+1. **Extract Data**: Fetch raw data from APIs and save locally as JSON to `data/jsons` directory.
+2. **Clean Data**: Process raw JSON into cleaned CSV datasets to `data/cleaned`.
+3. **Transform Data**: Generate enriched datasets with user and product insights to `data/insights` directory.
+4. **Automate Tasks**: Orchestrate pipeline execution using Apache Airflow.
 
-## Project Details
+---
 
-### Tech Stack
+## **Tech Stack**
 
-- **Primary Tools**: Python, Docker, Apache Airflow, Google BigQuery.
-- **Free BigQuery Tier**: Google Cloud Free Tier provides 50 GB of free storage and 1 TB of free queries per month. Create a free Google Cloud account to access BigQuery and Google Cloud Storage (GCS). Optionally, if you are unable to get a Google Cloud Account, you can save the data in your repository as CSV files, but BigQuery is encouraged.
+- **Primary Tools**: Python, Docker, Apache Airflow, Bash.
+- **Data Storage**: Local JSON and CSV files.
 
-### Tasks
+---
 
-1. **Extract Data from APIs**: 
-   - Use the following public APIs to retrieve data. Save the raw JSON data in Google Cloud Storage (GCS):
-     - Users Data
-     - Products Data
-     - Carts Data
-   - Example: Use `requests` or any HTTP library in Python to fetch data.
+## **Pipeline Design**
 
-2. **Clean and Normalize Data**: 
-   - Prepare the following cleaned datasets:
-     - **Users Table**:
-       - Fields: `user_id`, `first_name`, `last_name`, `gender`, `age`, `street`, `city`, `postal_code`.
-       - Tasks: Extract and flatten the address field into `street`, `city`, and `postal_code`.
-     - **Products Table**:
-       - Fields: `product_id`, `name`, `category`, `brand`, `price`.
-       - Tasks: Exclude products with `price <= 50`.
-     - **Carts Table**:
-       - Fields: `cart_id`, `user_id`, `product_id`, `quantity`, `price`, `total_cart_value`.
-       - Tasks: Flatten the products array into one row per product. Add `total_cart_value` for each cart.
+The pipeline is structured as an Airflow DAG with the following tasks:
 
-3. **Load Data into BigQuery**: 
-   - Store the cleaned datasets in separate BigQuery tables:
-     - `users_table`
-     - `products_table`
-     - `carts_table`
-
-4. **Join and Enrich Data**: 
-   - Perform the following joins in BigQuery:
-     - **Users and Carts**: Combine demographic data with transaction details.
-     - **Carts and Products**: Enrich transaction data with product details.
-   - Generate the following datasets:
-     - **User Summary**:
-       - Fields: `user_id`, `first_name`, `total_spent`, `total_items`, `age`, `city`.
-       - Insights: Total spending and number of purchases per user.
-     - **Category Summary**:
-       - Fields: `category`, `total_sales`, `total_items_sold`.
-       - Insights: Aggregate sales by product category.
-     - **Cart Details**:
-       - Fields: `cart_id`, `user_id`, `product_id`, `quantity`, `price`, `total_cart_value`.
-       - Insights: Transaction-level details enriched with user and product data.
-
-5. **Automate with Orchestration**: 
-   - Automate the pipeline using Apache Airflow. The tasks should run in the following order:
-     - Extract data from APIs.
-     - Save raw JSON locally.
-     - Clean and load data into BigQuery.
-     - Run transformations and generate outputs.
-
-6. **Document Your Work**: 
-   - Provide clear documentation:
-     - **Pipeline Design**: Include DAG structure and task dependencies.
-     - **Codebase Overview**: Explain your scripts and modules.
-     - **BigQuery Queries**: Share and explain your SQL logic.
-     - **Assumptions and Trade-offs**: Highlight decisions made during implementation.
+- **Extract Data**:
+  - Fetch raw data from APIs and save to `data/jsons/`.
+- **Clean Data**:
+  - Process raw JSON into cleaned CSV files and save to `data/cleaned/`.
+- **Transform Data**:
+  - Generate insights and save to `data/insights/`.
 
 ## Setup Instructions
 
@@ -84,6 +41,11 @@ We encourage you to use Apache Airflow, Docker, and Python, but you may use norm
 git clone git@github.com:foscraft/savannah_engineering.git
 cd savannah_engineering
 ```
+
+>> I am using docker and docker compose to roll and deploy the pipeline.
+
+>> If you have docker in your machine (*I honestly think you should! Haha*)
+
 Run the bash script
 
 ```bash
@@ -106,15 +68,41 @@ docker compose build
 docker compose up -d
 ```
 
-Running this creates the `scripts` directory, later the `data` directory is created and subdirectories `jsons`, `cleaned`, `insights`. The relevant files are created and populated into the directories specified. All these happens when the pipeline is started.
+Running this creates the `scripts` directory, later the `data` directory is created and subdirectories `jsons`, `cleaned`, `insights`. The relevant files are created and populated into the directories specified. 
+
+All these happens when the pipeline is tiggered.
+
+The `jupyter nbconvert` command simplifies deployment by converting Jupyter notebooks into Python scripts, which are more suitable for production environments. Scripts integrate seamlessly with version control systems like Git, align with collaborative workflows, and eliminate the need for a Jupyter server, allowing direct execution in any Python environment. This reduces overhead, improves performance, and ensures compatibility with automation tools and deployment pipelines. By automating the conversion, you save time and effort while maintaining the original functionality of the notebooks. This approach streamlines your workflow, enhances maintainability, and aligns with industry best practices for deploying machine learning and data science projects.
+
+- `extract_data.py`
+
+This script automates the process of fetching data from multiple REST API endpoints, handling pagination, and saving the results into JSON files for further use. It is designed to work with three endpoint /carts, /products, and /users available [here](https://dummyjson.com). The script ensures the retrieved data is organized and saved in a specified directory (/opt/airflow/data/jsons), which is created if it does not exist.
+
+For each endpoint, the script iteratively fetches paginated data using a limit and skip mechanism. It aggregates all the results into a single list, which is then saved as a formatted JSON file (e.g., carts.json, products.json, users.json). The script also includes robust error handling to catch and raise exceptions for failed API requests, ensuring reliability. If any error occurs during data fetching, the script halts and prints an error message detailing the issue. This setup is ideal for extracting large datasets from APIs and preparing them for further processing or analysis.
+
+- `clean_data.py`
+
+This script processes and cleans user, product, and cart data stored in JSON files, normalizes it into structured formats using pandas, and saves the cleaned data into CSV files for further analysis or use. It starts by defining a base directory (BASEDIR) where the JSON files (users.json, products.json, and carts.json) are stored and reads their content into Python dictionaries. The script then creates a cleaned directory to store the processed data as CSV files.
+
+For user data, the script extracts and normalizes address details (e.g., street, city, postal code) into separate columns, combines these with other user attributes (e.g., name, gender, age), and renames columns for clarity. For products, it filters out items priced at $50 or less and retains key attributes such as ID, name, category, and price. For cart data, it explodes nested product information into individual rows, calculates the total value of each cart based on product prices and quantities, and reformats the data for better usability. The cleaned datasets are then saved as cleaned_users.csv, cleaned_products.csv, and cleaned_carts.csv, providing a streamlined output for downstream applications or analysis.
+
+- `generate_insights.py`
+
+This script analyzes cleaned data from e-commerce operations, generating insightful summaries that provide valuable business intelligence. It reads preprocessed data from CSV files (cleaned_users.csv, cleaned_products.csv, and cleaned_carts.csv) located in a designated directory (/opt/airflow/data/cleaned). The script creates a new directory for storing the insights (/opt/airflow/data/insights) and ensures it exists before saving the outputs.
+
+The analysis includes three key components: a user summary, a category summary, and enriched cart details. The user summary aggregates data by user_id to calculate each user's total spending and the number of items purchased, enriching the results with user demographic information like age and city. The category summary calculates total sales and items sold for each product category, offering insights into category performance. Lastly, cart details combine user and product information with cart transactions to provide a granular view of each purchase. These insights are saved as CSV files for further review or integration into reporting tools.
+
+Go to  `http://127.0.0.1:4001` on your browser to get started.
+
+Login have a view of the  flow and trigger the worflow.
+
+![Airflow DAG Structure](media/2.png)
+
+![Airflow DAG Structure](media/1.png)
 
 The pipeline runs `hourly`
 
-![Airflow DAG Structure](media/2.png)//+
-
-![Airflow DAG Structure](media/1.png)//+
-
-Incase you're having trouble logging in to airflow; reset password.
+## Incase you're having trouble logging in to airflow; reset password.
 
 ```bash
 docker exec -it savannah_engineering-airflow-webserver-1  bash
