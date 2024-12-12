@@ -1,56 +1,67 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[3]:
+# In[ ]:
 
 
-import os
 import requests # type: ignore
 import json
-
-
-# In[4]:
-
-
-url_user = "https://dummyjson.com/user"
-url_products = "https://dummyjson.com/products"
-url_carts = "https://dummyjson.com/carts"
+import os
 
 
 # In[ ]:
 
 
-# Set the base directory to the mapped data directory in the Docker container
-DATA_DIR = '/opt/airflow/data/jsons'  # Adjusted to point to the correct directory
-os.makedirs(DATA_DIR, exist_ok=True)  # Create the directory if it doesn't exis
+DATA_DIR = '/opt/airflow/data/jsons'
+os.makedirs(DATA_DIR, exist_ok=True)
 
 
-# In[7]:
+# In[ ]:
 
 
-def fetch_and_save_data(url, filename):
-    try:
-        folder = DATA_DIR
-        if not os.path.exists(folder):
-            os.makedirs(folder)
+def fetch_and_save_data():
+    """
+    Fetch data from /carts, /products, and /users endpoints, handle pagination,
+    and save results to JSON files in the specified directory. Raise errors for failed API calls.
+    """
+    endpoints = {
+        "carts": "https://dummyjson.com/carts",
+        "products": "https://dummyjson.com/products",
+        "users": "https://dummyjson.com/users",
+    }
+    output_files = {
+        "carts": os.path.join(DATA_DIR, "carts.json"),
+        "products": os.path.join(DATA_DIR, "products.json"),
+        "users": os.path.join(DATA_DIR, "users.json"),
+    }
+    limit = 10  
 
-        filepath = os.path.join(folder, filename)
+    for key, url in endpoints.items():
+        try:
+            skip = 0
+            all_data = []
 
-        response = requests.get(url)
-        response.raise_for_status()  # Check if the request was successful
-        data = response.json()
+            while True:
+                response = requests.get(url, params={"limit": limit, "skip": skip})
+                response.raise_for_status()  
+                data = response.json()
+                results = data.get(key, [])  
+                if not results:
+                    break
 
-        with open(filepath, 'w') as json_file:
-            json.dump(data, json_file, indent=4)
-        print(f"Data saved to {filepath}")
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching data from {url}: {e}")
+                all_data.extend(results)
+                skip += limit
 
+            with open(output_files[key], "w") as json_file:
+                json.dump(all_data, json_file, indent=4)
 
-# In[8]:
+            print(f"Data for '{key}' successfully saved to {output_files[key]} with {len(all_data)} entries.")
 
+        except requests.exceptions.RequestException as e:
+            raise RuntimeError(f"Failed to fetch data from {url}: {e}")
 
-fetch_and_save_data(url_user, "users.json")
-fetch_and_save_data(url_products, "products.json")
-fetch_and_save_data(url_carts, "carts.json")
+try:
+    fetch_and_save_data()
+except RuntimeError as e:
+    print(f"Error: {e}")
 

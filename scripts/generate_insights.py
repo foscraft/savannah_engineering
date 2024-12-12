@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[7]:
+# In[1]:
 
 
 import os
@@ -11,11 +11,10 @@ import pandas as pd # type: ignore
 # In[ ]:
 
 
-# Set the base directory to the mapped data directory in the Docker container
-BASEDIR = '/opt/airflow/data'  # Adjusted to point to the correct directory
+BASEDIR = '/opt/airflow/data'
 
 
-# In[9]:
+# In[3]:
 
 
 users_df = pd.read_csv(os.path.join(BASEDIR, 'cleaned', 'cleaned_users.csv'))
@@ -23,7 +22,7 @@ products_df = pd.read_csv(os.path.join(BASEDIR, 'cleaned', 'cleaned_products.csv
 carts_df = pd.read_csv(os.path.join(BASEDIR, 'cleaned', 'cleaned_carts.csv'))
 
 
-# In[10]:
+# In[4]:
 
 
 INSIGHTS_DIR = os.path.join(BASEDIR, 'insights')
@@ -33,7 +32,6 @@ os.makedirs(INSIGHTS_DIR, exist_ok=True)
 # In[11]:
 
 
-# 1. User Summary: Total spending and number of purchases per user
 user_summary = carts_df.groupby('user_id').agg(
     total_spent=('total_cart_value', 'sum'),
     total_items=('cart_id', 'count')

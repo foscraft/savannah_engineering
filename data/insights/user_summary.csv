@@ -1,30 +1,46 @@
 user_id,total_spent,total_items,first_name,age,city
-6,1749.9,3,Olivia,22.0,Fort Worth
-11,11741.310000000001,5,Liam,29.0,Denver
-23,15685.859999999999,4,Chloe,39.0,Dallas
-33,103774.85,4,,,
-41,793.07,5,,,
-42,251.95999999999998,2,,,
-59,933.87,4,,,
-66,459.92,2,,,
-75,190.89,4,,,
-86,145651.89,3,,,
-87,456.83000000000004,4,,,
-90,3534.78,6,,,
-94,586.82,6,,,
-108,16775.87,5,,,
-118,412.98,2,,,
-134,7431.3,6,,,
-140,222.88,4,,,
-141,192.87,4,,,
-142,4794.8,5,,,
-147,7967.71,7,,,
-150,35199.86,4,,,
-160,29499.920000000002,2,,,
-170,3862.43,5,,,
-172,568.36,6,,,
-177,128249.07,4,,,
-189,1464.78,6,,,
-194,65529.87,4,,,
-200,172.23999999999998,3,,,
-202,931.9100000000001,2,,,
+6,1749.9,3,Olivia,22,Fort Worth
+11,11741.310000000001,5,Liam,29,Denver
+15,3359.79,6,William,32,San Jose
+20,460.87,4,Jackson,34,New York
+23,16143.72,9,Chloe,39,Dallas
+33,274072.67000000004,10,Carter,31,Denver
+35,179.96,2,Jack,29,Phoenix
+41,793.07,5,Evan,32,San Antonio
+42,251.95999999999998,2,Avery,28,San Diego
+50,260.89,3,Stella,33,Jacksonville
+52,36.28,2,Grace,26,Seattle
+59,933.87,4,Ethan,33,Dallas
+66,459.92,2,Aria,27,San Diego
+67,12059.929999999998,2,Gabriel,34,San Jose
+75,190.89,4,Ryan,31,San Antonio
+81,44376.84,6,Austin,29,Los Angeles
+86,152668.66,9,Nora,26,San Jose
+87,456.83000000000004,4,Hunter,33,Charlotte
+90,3534.78,6,Scarlett,27,New York
+93,3603.97,2,Julian,34,Fort Worth
+94,586.82,6,Ruby,28,Dallas
+108,16775.87,5,James,45,Washington
+118,412.98,2,Benjamin,30,Philadelphia
+134,7431.3,6,Nora,24,Charlotte
+140,222.88,4,Hannah,35,Indianapolis
+141,192.87,4,Owen,43,Charlotte
+142,4794.8,5,Aria,27,Phoenix
+143,4749.87,4,Grayson,30,San Francisco
+147,7967.71,7,Henry,44,Philadelphia
+150,35199.86,4,Stella,39,San Diego
+153,417.87,4,Christian,31,Chicago
+160,29499.920000000002,2,Claire,29,San Jose
+164,65519.87,4,Addison,29,San Francisco
+170,3862.43,5,Penelope,33,Los Angeles
+172,568.36,6,Ariana,36,Chicago
+176,1875.89,3,Aaliyah,28,New York
+177,128249.07,4,Xavier,37,Jacksonville
+181,229.93,2,Brandon,26,Dallas
+184,944.0,6,Natalie,28,Washington
+187,98499.82,6,Zachary,36,Dallas
+189,1464.78,6,Tristan,30,San Diego
+194,65529.87,4,Brayden,45,Austin
+200,172.23999999999998,3,Adrian,43,New York
+202,931.9100000000001,2,Caleb,36,Philadelphia
+203,830.8299999999999,4,Nova,31,Los Angeles

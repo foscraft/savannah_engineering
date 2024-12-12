@@ -18,7 +18,7 @@ def run_script(script_name):
 
 default_args = {
     'owner': 'airflow',
-    'start_date': datetime(2024, 12, 9),
+    'start_date': datetime(2024, 12, 12),
     'retries': 1,
 }
 
