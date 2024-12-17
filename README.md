@@ -1,4 +1,4 @@
-# **Data Engineering Screening Challenge**
+# **Data Engineering Challenge**
 
 This project demonstrates the implementation of a complete ETL pipeline to process claims and user data using Python, Docker, Apache Airflow, and Bash. The pipeline extracts data from APIs, cleans and processes it, and generates enriched datasets with insights.
 
